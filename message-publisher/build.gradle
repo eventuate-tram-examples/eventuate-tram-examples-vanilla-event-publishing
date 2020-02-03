@@ -1,0 +1,17 @@
+plugins {
+    id "application"
+}
+
+application {
+    mainClassName = "io.eventuate.examples.tram.vanilla.event.publishing.PublisherMain"
+}
+
+dependencies {
+    compile "io.eventuate.tram.core:eventuate-tram-events:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-messaging-producer-common:$eventuateTramVersion"
+    compile "io.eventuate.tram.core:eventuate-tram-producer-jdbc:$eventuateTramVersion"
+
+    compile 'com.github.shyiko:mysql-binlog-connector-java:0.16.1'
+    compile 'com.zaxxer:HikariCP:2.2.5'
+}
+
