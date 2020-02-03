@@ -5,7 +5,6 @@ import io.eventuate.common.jdbc.EventuateCommonJdbcOperations;
 import io.eventuate.common.jdbc.EventuateSchema;
 import io.eventuate.common.jdbc.sqldialect.MySqlDialect;
 import io.eventuate.tram.events.common.DefaultDomainEventNameMapping;
-import io.eventuate.tram.events.common.DomainEvent;
 import io.eventuate.tram.events.publisher.DomainEventPublisher;
 import io.eventuate.tram.events.publisher.DomainEventPublisherImpl;
 import io.eventuate.tram.messaging.common.DefaultChannelMapping;
@@ -20,6 +19,10 @@ import java.util.UUID;
 
 public class PublisherMain {
   public static void main(String[] args) {
+    if (args.length < 0) throw new IllegalArgumentException("Event id is not specifed");
+
+    String eventId = args[0];
+
     String dbUser = System.getenv("DATASOURCE_USERNAME");
     String dbPassword = System.getenv("DATASOURCE_PASSWORD");
     String dbDriver = System.getenv("DATASOURCE_DRIVER_CLASS_NAME");
@@ -40,17 +43,10 @@ public class PublisherMain {
 
     domainEventPublisher.publish(SampleAggregate.class.getName(),
             generateId(),
-            Collections.singletonList(new SampleEvent()));
-
-    System.out.println("===============");
-    System.out.println("Event published");
-    System.out.println("===============");
+            Collections.singletonList(new SampleEvent(eventId)));
   }
 
   private static String generateId() {
     return UUID.randomUUID().toString();
   }
-
-  private static class SampleEvent implements DomainEvent {}
-  private static class SampleAggregate {}
 }

@@ -28,7 +28,7 @@ services:
       - MYSQL_PASSWORD=mysqlpw
 
   cdcservice:
-    image: test-eventuate-cdc-service
+    image: eventuateio/eventuate-cdc-service:$EVENTUATE_CDC_VERSION
     ports:
       - "8099:8080"
     depends_on:
@@ -47,11 +47,10 @@ services:
       EVENTUATELOCAL_CDC_READER_NAME: MySqlReader
       EVENTUATELOCAL_CDC_OFFSET_STORE_KEY: MySqlBinlog
       EVENTUATELOCAL_CDC_MYSQL_BINLOG_CLIENT_UNIQUE_ID: 1234567890
-      EVENTUATE_CDC_KAFKA_ENABLE_BATCH_PROCESSING: "true"
       EVENTUATELOCAL_CDC_READ_OLD_DEBEZIUM_DB_OFFSET_STORAGE_TOPIC: "false"
 
 
   adminer:
-    image: adminer
+    image: adminer:4.7.6
     ports:
       - "9000:8080"
