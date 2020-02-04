@@ -28,8 +28,9 @@ public class PublisherMain {
     String dbDriver = System.getenv("DATASOURCE_DRIVER_CLASS_NAME");
     String dbUrl = System.getenv("DATASOURCE_URL");
 
-    EventuateCommonJdbcOperations eventuateCommonJdbcOperations =
-            new EventuateCommonJdbcOperations(new JdbcStatementExecutor(dbUser, dbPassword, dbDriver, dbUrl));
+    JdbcConnectionSupplier jdbcConnectionSupplier = new HikariJdbcConnectionSupplier(dbUser, dbPassword, dbDriver, dbUrl);
+    JdbcStatementExecutor jdbcStatementExecutor = new JdbcStatementExecutor(jdbcConnectionSupplier);
+    EventuateCommonJdbcOperations eventuateCommonJdbcOperations = new EventuateCommonJdbcOperations(jdbcStatementExecutor);
 
     MessageProducerImplementation messageProducerImplementation = new MessageProducerJdbcImpl(eventuateCommonJdbcOperations,
             new IdGeneratorImpl(),
@@ -41,7 +42,7 @@ public class PublisherMain {
 
     DomainEventPublisher domainEventPublisher = new DomainEventPublisherImpl(messageProducer, new DefaultDomainEventNameMapping());
 
-    domainEventPublisher.publish(SampleAggregate.class.getName(),
+    domainEventPublisher.publish("...",
             generateId(),
             Collections.singletonList(new SampleEvent(eventId)));
   }

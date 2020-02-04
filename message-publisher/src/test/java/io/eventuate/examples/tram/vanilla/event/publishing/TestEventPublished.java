@@ -1,4 +1,5 @@
-import io.eventuate.examples.tram.vanilla.event.publishing.SampleAggregate;
+package io.eventuate.examples.tram.vanilla.event.publishing;
+
 import io.eventuate.messaging.kafka.basic.consumer.EventuateKafkaConsumerConfigurationProperties;
 import io.eventuate.messaging.kafka.consumer.MessageConsumerKafkaImpl;
 import io.eventuate.tram.consumer.common.*;
@@ -38,14 +39,13 @@ public class TestEventPublished {
 
     BlockingQueue<String> messages = new LinkedBlockingQueue<>();
 
-    messageConsumer.subscribe("testSubscriber" + generateUUID(), Collections.singleton(SampleAggregate.class.getName()), message -> {
-      messages.add(message.getPayload());
+    messageConsumer.subscribe("testSubscriber" + generateUUID(), Collections.singleton("..."), message -> {
+      if (message.getPayload().contains(eventId)) messages.add(message.getPayload());
     });
 
     String message = messages.poll(30, TimeUnit.SECONDS);
 
     Assert.assertNotNull(message);
-    Assert.assertTrue(message.contains(eventId));
   }
 
   private String generateUUID() {
